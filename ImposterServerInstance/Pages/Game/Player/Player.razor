@@ -3,35 +3,31 @@
 
 @if (!(player is null))
 {
-<div style="background-color:@Enum.GetName(typeof(ImposterServer.GameModels.PlayerColor),player.PlayerData.Color)">
+    <div style="background-color:@Enum.GetName(typeof(ImposterServer.GameModels.PlayerColor), player.PlayerData.Color)">
+        <center>
+            <h3>@player.PlayerData.Name</h3>
+        </center>
+    </div>
+    <div class="container">
+        <div class="vertical-center">
+            <button class="btn-primary" @onclick="PerformTask">Perform Task</button>
+            <button class="btn-primary" @onclick="KillPlayer">Kill Player</button>
+        </div>
+    </div>
     <center>
-        <h3>@player.PlayerData.Name</h3>
-    </center>
-</div>
-}
-
-
-
-
-
-
-
-<center>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    isAlive
-                </th>
-                <th>
-                    isImposter
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (!(player is null))
-            {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        isAlive
+                    </th>
+                    <th>
+                        isImposter
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
                 <tr>
                     <td>
                         @player.PlayerData.isAlive
@@ -40,11 +36,13 @@
                         @player.PlayerData.isImposter
                     </td>
                 </tr>
-            }
-        </tbody>
-    </table>
-</center>
-
+            </tbody>
+        </table>
+    </center>
+}
+else
+{
+}
 
 @code {
 
@@ -60,9 +58,13 @@
     {
         player = server.FindPlayer(Int32.Parse(gameId), Int32.Parse(playerId));
     }
+    protected async Task PerformTask()
+    {
 
+    }
+    protected async Task KillPlayer()
+    {
 
-
-
+    }
 
 }

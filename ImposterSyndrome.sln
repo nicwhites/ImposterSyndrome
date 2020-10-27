@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImposterServer", "ImposterServer\ImposterServer.csproj", "{610C6D7A-A254-47CD-ACE4-9295C07B1455}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImposterServerInstance", "ImposterServerInstance\ImposterServerInstance.csproj", "{83D7397E-82A2-4632-8178-D83627C13C10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImposterServerInstance", "ImposterServerInstance\ImposterServerInstance.csproj", "{83D7397E-82A2-4632-8178-D83627C13C10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
