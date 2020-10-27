@@ -1,6 +1,7 @@
 ﻿@page "/Game/Host/{gameId}/{hostId}"
 @inject ImposterServer.ServersManager.ServersManager server
 @using ImposterServer.Controllers
+@inject NavigationManager NavigationManager
 
 <h3>Host</h3>
 
@@ -14,6 +15,10 @@
 }
 else
 {
+
+
+    <button @onclick="StartGame">Start Game</button><span></span>
+    <button @onclick="ExitGame">ExitGame</button>
     <table class="table">
         <thead>
             <tr>
@@ -33,7 +38,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach(var player in players)
+            @foreach (var player in players)
             {
                 <tr>
                     <td>
@@ -66,10 +71,27 @@ else
     protected override async Task OnInitializedAsync()
     {
         host = server.FindHost(Int32.Parse(gameId), Int32.Parse(hostId));
+        players = host.Players;
     }
 
     protected async Task RefreshPlayerList()
     {
         players = host.Players;
     }
+
+    protected async Task StartGame()
+    {
+
+    }
+    protected async Task ExitGame()
+    {
+        var tmp = server.GamesInProgress.Find(x => x.GameId == Int32.Parse(gameId));
+        server.RemoveGame(tmp);
+        tmp.Dispose();
+        NavigationManager.NavigateTo("/");
+    }
+
+
+
+
 }
