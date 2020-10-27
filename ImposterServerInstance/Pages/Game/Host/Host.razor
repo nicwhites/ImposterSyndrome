@@ -1,0 +1,75 @@
+﻿@page "/Game/Host/{gameId}/{hostId}"
+@inject ImposterServer.ServersManager.ServersManager server
+@using ImposterServer.Controllers
+
+<h3>Host</h3>
+
+<h2>Lobby Code: @gameId</h2>
+
+<button @onclick="RefreshPlayerList">Refresh Player List</button>
+
+@if (players == null)
+{
+    <p><em>No players in Lobby...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    isAlive
+                </th>
+                <th>
+                    isImposter
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Color
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var player in players)
+            {
+                <tr>
+                    <td>
+                        @player.PlayerData.isAlive
+                    </td>
+                    <td>
+                        @player.PlayerData.isImposter
+                    </td>
+                    <td>
+                        @player.PlayerData.Name
+                    </td>
+                    <td>
+                        @player.PlayerData.Color
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public string gameId { get; set; }
+    [Parameter]
+    public string hostId { get; set; }
+
+    private HostController host;
+    private List<PlayerController> players;
+
+    protected override async Task OnInitializedAsync()
+    {
+        host = server.FindHost(Int32.Parse(gameId), Int32.Parse(hostId));
+    }
+
+    protected async Task RefreshPlayerList()
+    {
+        players = host.Players;
+    }
+}

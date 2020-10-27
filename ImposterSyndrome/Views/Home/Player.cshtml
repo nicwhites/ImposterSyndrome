@@ -1,0 +1,47 @@
+﻿@model ImposterSyndrome.Models.PlayerModel
+@{
+    ViewData["Title"] = "PlayerView";
+}
+
+<h1>PlayerView</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.isAlive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.isImposter)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Color)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@if(!(Model is null)){
+        <tr>
+            <td>
+                @Model.isAlive
+            </td>
+            <td>
+                @Model.isImposter
+            </td>
+            <td>
+                @Model.Name
+            </td>
+            <td>
+                @Model.Color
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

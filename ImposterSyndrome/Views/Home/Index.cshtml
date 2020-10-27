@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Imposter Syndrome";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <h3>Host Game</h3><a asp-controller="Home" asp-action="Host"><button class="btn btn-primary">Host</button></a>
+    <br />
+    <h3>Join Game</h3>
+    @using(Html.BeginForm("Player", "Home")){
+
+
+    <input type="text" id="gameId", name="gameId" />
+    <input type="submit" value="Player" />
+    }
+
+</div>

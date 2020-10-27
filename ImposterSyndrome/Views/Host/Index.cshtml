@@ -1,0 +1,35 @@
+﻿@model ImposterServer.Managers.GameController
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Game</h1>
+
+<div>
+    <h2>Game ID</h2>
+    <code>@Model.GameId</code>
+    <br />
+    @if (!(Model.Host.Host.players is null))
+    {
+    @foreach (var player in Model.Host.Host.players)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => player.isAlive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => player.isImposter)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => player.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => player.Color)
+            </td>
+        </tr>
+    }
+    }
+</div>
+
+

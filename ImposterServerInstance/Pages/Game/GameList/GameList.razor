@@ -1,0 +1,46 @@
+﻿@page "/GameList"
+@inject ImposterServer.ServersManager.ServersManager server
+
+<h3>GameList</h3>
+
+@if (games == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Game Id</th>
+                <th>Number of Players</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var game in games)
+            {
+            <tr>
+                <td>@game.GameId</td>
+                <td>@game.Host.Players.Count</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+
+
+
+
+@code {
+
+    private ImposterServer.Controllers.GameController[] games;
+
+    protected override async Task OnInitializedAsync()
+    {
+        games = server.GamesInProgress.ToArray();
+    }
+
+}

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="93c12ce9-11cc-4e3c-ae9b-7623f25b96e3" ChangeDateTime="10/27/2020 04:15:59">
+    <Property Name="ElementName" Value="[dbo].[Games].[HostName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Games]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CurrentlyRunning" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0bb090b0-961a-4a2d-abad-6312057f611f" ChangeDateTime="10/27/2020 04:41:47">
+    <Property Name="ElementName" Value="[dbo].[Players].[CharacterName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Players]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Name" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="14990af8-de69-4f6e-88bc-ec56479d50d1" ChangeDateTime="10/27/2020 04:41:52">
+    <Property Name="ElementName" Value="[dbo].[Players].[CharacterColor]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Players]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Color" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c174bf3d-0b46-4d76-beca-53a354912a39" ChangeDateTime="10/27/2020 04:59:07">
+    <Property Name="ElementName" Value="[dbo].[Games].[CurrentlyRunning]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Games]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="isRunning" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7fe3f28e-9495-4205-9721-948fec120062" ChangeDateTime="10/27/2020 04:59:10">
+    <Property Name="ElementName" Value="[dbo].[Games].[Started]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Games]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="isStarted" />
+  </Operation>
+</Operations>

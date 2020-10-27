@@ -1,0 +1,59 @@
+﻿@page "/"
+@inject ImposterServer.ServersManager.ServersManager serverManager
+@inject NavigationManager NavigationManager
+@using System 
+
+<style>
+    h1 {
+        text-align: center;
+    }
+
+    p {
+        text-align: center;
+    }
+
+    div {
+        text-align: center;
+    }
+</style>
+
+<h1>Welcome to Imposter Syndrome</h1>
+<p>
+    Please either Host or Join a Lobby
+</p>
+<br />
+
+<button class="btn-primary" @onclick="HostNewServer">Host new Server</button>
+<br />
+<br />
+<br />
+
+<input type="text" @bind="@ServerAddress" /><span></span><button class="btn-primary" @onclick="FindServer">Find Server</button>
+
+@code
+{
+    public string ServerAddress { get; set; }
+    public async Task FindServer()
+    {
+
+
+        if (ServerAddress is null)
+        { }
+        var id = Int32.Parse(ServerAddress);
+        if (!serverManager.GamesInProgress.Exists(x => x.GameId == id))
+        {
+            
+        }
+        else
+        {
+            var response = await serverManager.GamesInProgress.Find(x => x.GameId == id).Host.CreatePlayer();
+            NavigationManager.NavigateTo($"/Game/Player/{ServerAddress}/{response}");
+        }
+    }
+    public void HostNewServer()
+    {
+        var tmp = new ImposterServer.Controllers.GameController(ImposterServer.ServersManager.ServersManager.GenerateGameId().Result);
+        serverManager.GamesInProgress.Add(tmp);
+        NavigationManager.NavigateTo($"/Game/Host/{tmp.GameId}/{tmp.Host.HostData.HostId}");
+    }
+}
