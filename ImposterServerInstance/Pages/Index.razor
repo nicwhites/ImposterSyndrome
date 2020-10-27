@@ -1,7 +1,7 @@
 ﻿@page "/"
 @inject ImposterServer.ServersManager.ServersManager serverManager
 @inject NavigationManager NavigationManager
-@using System 
+@using System
 
 <style>
     h1 {
@@ -22,14 +22,10 @@
     Please either Host or Join a Lobby
 </p>
 <br />
-
+<button class="btn-primary" @onclick="FindServer">Find Server</button><input type="text" @bind="@ServerAddress" />
+<br />
 <button class="btn-primary" @onclick="HostNewServer">Host new Server</button>
 <br />
-<br />
-<br />
-
-<input type="text" @bind="@ServerAddress" /><span></span><button class="btn-primary" @onclick="FindServer">Find Server</button>
-
 @code
 {
     public string ServerAddress { get; set; }
@@ -42,7 +38,7 @@
         var id = Int32.Parse(ServerAddress);
         if (!serverManager.GamesInProgress.Exists(x => x.GameId == id))
         {
-            
+
         }
         else
         {

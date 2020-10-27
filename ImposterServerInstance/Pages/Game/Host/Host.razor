@@ -7,7 +7,7 @@
 
 <h2>Lobby Code: @gameId</h2>
 
-<button @onclick="RefreshPlayerList">Refresh Player List</button>
+<button class="btn-primary" @onclick="RefreshPlayerList">Refresh Player List</button>
 
 @if (players == null)
 {
@@ -17,8 +17,8 @@ else
 {
 
 
-    <button @onclick="StartGame">Start Game</button><span></span>
-    <button @onclick="ExitGame">ExitGame</button>
+    <button class="btn-primary" @onclick="StartGame">Start Game</button><span></span>
+    <button class="btn-primary" @onclick="ExitGame">ExitGame</button>
     <table class="table">
         <thead>
             <tr>
