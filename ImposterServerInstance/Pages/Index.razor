@@ -1,5 +1,5 @@
 ﻿@page "/"
-@inject ImposterServer.ServersManager.ServersManager serverManager
+@inject ImposterServerInstance.ServersManager.ServersManager serverManager
 @inject NavigationManager NavigationManager
 @using System
 
@@ -41,15 +41,14 @@
 
         }
         else
-        {
-            var response = await serverManager.GamesInProgress.Find(x => x.GameId == id).Host.CreatePlayer();
-            NavigationManager.NavigateTo($"/Game/Player/{ServerAddress}/{response}");
+        {   
+            NavigationManager.NavigateTo($"/Game/{ServerAddress}/Player");
         }
     }
     public void HostNewServer()
     {
-        var tmp = new ImposterServer.Controllers.GameController(ImposterServer.ServersManager.ServersManager.GenerateGameId().Result);
+        var tmp = new ImposterServerInstance.Controllers.GameController(ImposterServerInstance.ServersManager.ServersManager.GenerateGameId().Result);
         serverManager.GamesInProgress.Add(tmp);
-        NavigationManager.NavigateTo($"/Game/Host/{tmp.GameId}/{tmp.Host.HostData.HostId}");
+        NavigationManager.NavigateTo($"/Game/{tmp.GameId}/Host");
     }
 }

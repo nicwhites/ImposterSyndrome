@@ -1,10 +1,12 @@
 ﻿using ImposterServer.Data;
-using ImposterServer.GameModels;
+using ImposterServerInstance.GameModels;
+
+using Microsoft.AspNetCore.Components;
 using System;
 
-namespace ImposterServer.Controllers
+namespace ImposterServerInstance.Controllers
 {
-    public class PlayerController
+    public partial class PlayerController : ComponentBase
     {
         public PlayerModel PlayerData { get; internal set; }
 
@@ -23,10 +25,22 @@ namespace ImposterServer.Controllers
         {
             EmergencyEvent?.Invoke(this, $"{PlayerData.Name} Sounded the Alarm!"); // Trigger the Event
         }
-
         public void ReceivedEmergency()
         {
+            this.PlayerData.isEmergency = true;
+            try
+            {
+                InvokeAsync(() => StateHasChanged());
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+        public void AcknowledgedEmergency()
+        {
             this.PlayerData.isEmergency = false;
+            InvokeAsync(() => StateHasChanged());
         }
     }
 }

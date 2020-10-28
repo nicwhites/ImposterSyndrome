@@ -30,7 +30,8 @@ namespace ImposterServerInstance
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddSingleton<ImposterServer.ServersManager.ServersManager>();
+            services.AddSingleton<ServersManager.ServersManager>();
+            services.AddSingleton<Data.Controllers.NotificationSystem>();
             services.AddBlazoredToast();
         }
 

@@ -1,6 +1,7 @@
 ﻿using ImposterServer.Data;
-using ImposterServer.GameModels;
+using ImposterServerInstance.GameModels;
 using ImposterServer.PlayerTask;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Schema;
 
-namespace ImposterServer.Controllers
+namespace ImposterServerInstance.Controllers
 {
-   public class HostController : IDisposable
+   public partial class HostController : ComponentBase, IDisposable
     {
         private bool disposedValue;
         public HostModel HostData { get; internal set; }
-        public List<PlayerController> Players { get; internal set;}
+        public List<PlayerController>? Players { get; internal set;}
         public HostController(int GameId)
         {
             HostData = new HostModel
@@ -36,8 +37,7 @@ namespace ImposterServer.Controllers
             if (Players.Count == 0)
             {
                 player.PlayerData.Name = Names.List[new Random().Next(Names.List.Length)];
-                Players.Add(player);
-                return player.PlayerData.PlayerId;
+                AddPlayer(player);
             }
             else
             {
@@ -55,30 +55,34 @@ namespace ImposterServer.Controllers
                         uniqueName = Players.All(x => hsName.Add(x.PlayerData.Name));
                     }
                 });
-                Players.Add(player);
-                return player.PlayerData.PlayerId;
+                AddPlayer(player);
             }
+            return player.PlayerData.PlayerId;
         }
         protected void Emergency(object sender, string e)
         {
+            
             foreach(var player in Players)
-            {                
-                player.PlayerData.isEmergency = !player.PlayerData.isEmergency;                
+            {
+                player.ReceivedEmergency();      
             }
         }
 
         public void AddPlayer(PlayerController player)
-        {
-            Players.Add(player);
+        {        
+            Players.Add(player);         
         }
         public void DeletePlayer(PlayerController player)
         {
+            StateHasChanged();
             Players.Remove(player);
         }
         public void ReviveAllPlayer()
         {
+            StateHasChanged();
             Players.ForEach(x => x.PlayerData.isAlive = true);
         }
+
 
         protected virtual void Dispose(bool disposing)
         {

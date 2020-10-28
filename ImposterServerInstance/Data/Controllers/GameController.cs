@@ -1,4 +1,4 @@
-﻿using ImposterServer.GameModels;
+﻿using ImposterServerInstance.GameModels;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImposterServer.Controllers
+namespace ImposterServerInstance.Controllers
 {
-    public class GameController : IDisposable
+    public partial class GameController : IDisposable
     {
         public int GameId { get; }
         public HostController Host { get; internal set; }

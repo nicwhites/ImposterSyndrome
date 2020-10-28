@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ImposterServer.GameModels
+namespace ImposterServerInstance.GameModels
 {
     public class PlayerModel
     {

@@ -1,5 +1,5 @@
 ﻿@page "/GameList"
-@inject ImposterServer.ServersManager.ServersManager server
+@inject ImposterServerInstance.ServersManager.ServersManager server
 
 <h3>GameList</h3>
 
@@ -36,7 +36,7 @@ else
 
 @code {
 
-    private ImposterServer.Controllers.GameController[] games;
+    private ImposterServerInstance.Controllers.GameController[] games;
 
     protected override async Task OnInitializedAsync()
     {

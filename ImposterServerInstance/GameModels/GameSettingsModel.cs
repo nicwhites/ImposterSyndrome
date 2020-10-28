@@ -1,4 +1,4 @@
-﻿namespace ImposterServer.GameModels
+﻿namespace ImposterServerInstance.GameModels
 {
     public class GameSettingsModel
     {

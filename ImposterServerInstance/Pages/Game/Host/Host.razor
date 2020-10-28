@@ -1,21 +1,24 @@
-﻿@page "/Game/Host/{gameId}/{hostId}"
-@inject ImposterServer.ServersManager.ServersManager server
-@using ImposterServer.Controllers
+﻿@namespace ImposterServerInstance.Pages.Game
+@inject ImposterServerInstance.ServersManager.ServersManager server
+@using ImposterServerInstance.Controllers
 @inject NavigationManager NavigationManager
+@inject ImposterServerInstance.Data.Controllers.NotificationSystem emergencySystem
+@implements IDisposable
 
+<h2>Lobby Code: @GameId</h2>
 
-<h2>Lobby Code: @gameId</h2>
+<button class="btn-primary" @onclick="@Refresh">Refresh Player List</button>
 
-<button class="btn-primary" @onclick="RefreshPlayerList">Refresh Player List</button>
-
-@if (players.Count == 0)
+@if (SessionHost.Players is null)
+{
+    <p>Loading Page...</p>
+}
+@if (!(SessionHost.Players is null) && SessionHost.Players.Count == 0)
 {
     <p><em>No players in Lobby...</em></p>
 }
-else
+@if (!(SessionHost.Players is null) && SessionHost.Players.Count > 0)
 {
-
-
     <button class="btn-primary" @onclick="StartGame">Start Game</button><span></span>
     <button class="btn-primary" @onclick="ExitGame">ExitGame</button>
     <table class="table" style="background-color: #b6b6b6; text-align: center">
@@ -31,11 +34,11 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var player in players)
+            @foreach (var player in SessionHost.Players)
             {
                 <tr>
-                    <td style="background-color: @(Enum.GetName(typeof(ImposterServer.GameModels.PlayerColor),player.PlayerData.Color))">
-                            @player.PlayerData.Name
+                    <td style="background-color: @(Enum.GetName(typeof(ImposterServerInstance.GameModels.PlayerColor),player.PlayerData.Color))">
+                        @player.PlayerData.Name
                     </td>
                     <td>
                         @(player.PlayerData.isAlive ? "Alive" : "Dead")
@@ -48,22 +51,15 @@ else
 
 @code {
     [Parameter]
-    public string gameId { get; set; }
+    public string GameId { get; set; }
     [Parameter]
-    public string hostId { get; set; }
-
-    private HostController host;
-    private List<PlayerController> players;
+    public int HostId { get; set; }
+    [Parameter]
+    public HostController SessionHost { get; set; }
 
     protected override async Task OnInitializedAsync()
-    {
-        host = server.FindHost(Int32.Parse(gameId), Int32.Parse(hostId));
-        players = host.Players;
-    }
-
-    protected async Task RefreshPlayerList()
-    {
-        players = host.Players;
+    {        
+        await InvokeAsync(() => StateHasChanged());
     }
 
     protected async Task StartGame()
@@ -72,13 +68,19 @@ else
     }
     protected async Task ExitGame()
     {
-        var tmp = server.GamesInProgress.Find(x => x.GameId == Int32.Parse(gameId));
+        var tmp = server.GamesInProgress.Find(x => x.GameId == Int32.Parse(GameId));
         server.RemoveGame(tmp);
         tmp.Dispose();
         NavigationManager.NavigateTo("/");
     }
+    protected async Task Refresh()
+    {
+        await InvokeAsync(() => StateHasChanged());
+    }
 
-
-
+    public void Dispose()
+    {
+        emergencySystem.OnChange -= StateHasChanged;
+    }
 
 }

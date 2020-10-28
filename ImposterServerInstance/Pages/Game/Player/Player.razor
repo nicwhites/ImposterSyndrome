@@ -1,15 +1,13 @@
-﻿@page "/Game/Player/{gameId}/{playerId}"
-@inject ImposterServer.ServersManager.ServersManager server
+﻿@namespace ImposterServerInstance.Pages.Game
+@inject ImposterServerInstance.ServersManager.ServersManager server
 @inject Blazored.Toast.Services.IToastService toastService
 @inject NavigationManager NavigationManager
-
-
-
-@if (!(player is null))
+@inject ImposterServerInstance.Data.Controllers.NotificationSystem emergencySystem
+@if (!(SessionPlayer is null))
 {
-    <div style="background-color:@Enum.GetName(typeof(ImposterServer.GameModels.PlayerColor), player.PlayerData.Color)">
+    <div style="background-color:@Enum.GetName(typeof(ImposterServerInstance.GameModels.PlayerColor), SessionPlayer.PlayerData.Color)">
         <center>
-            <h3>@player.PlayerData.Name</h3>
+            <h3>@SessionPlayer.PlayerData.Name</h3>
         </center>
     </div>
     <div class="container">
@@ -18,7 +16,7 @@
             <button class="btn-primary" @onclick="KillPlayer">Kill Player</button>
         </div>
         <div class="vertical-center">
-            <button class="btn-primary" @onclick="@(EmergencyMessage)">EMERGENCY</button>
+            <button class="btn-primary" @onclick="Emergency">EMERGENCY</button>
         </div>
     </div>
     <center>
@@ -37,10 +35,10 @@
             <tbody>
                 <tr>
                     <td>
-                        @player.PlayerData.isAlive
+                        @SessionPlayer.PlayerData.isAlive
                     </td>
                     <td>
-                        @player.PlayerData.isImposter
+                        @SessionPlayer.PlayerData.isImposter
                     </td>
                 </tr>
             </tbody>
@@ -48,39 +46,41 @@
     </center>
 }
 
-@if (player.PlayerData.isEmergency)
+@if (SessionPlayer.PlayerData.isEmergency)
 {
 
     <div class="container">
         @if (!hasBeenReceived)
         {
-             @DisplayMessage();
+            @DisplayMessage()
         }
         @if (!hasAcknowledged)
         {
-        <button class="btn-primary" @onclick="@(Acknowledge)">Acknowledge!</button>
+            <button class="btn-primary" @onclick="@Acknowledge">Acknowledge!</button>
         }
     </div>
 }
-@RefreshPage(); 
 
 @code {
 
     [Parameter]
-    public string gameId { get; set; }
+    public string GameId { get; set; }
     [Parameter]
-    public string playerId { get; set; }
+    public int PlayerId { get; set; }
     [Parameter]
-    public ImposterServer.Controllers.PlayerController player { get; set; }
+    public ImposterServerInstance.Controllers.HostController SessionHost { get; set; }
 
+    private ImposterServerInstance.Controllers.PlayerController SessionPlayer { get; set; }
 
     private bool hasAcknowledged { get; set; } = false;
     private bool hasBeenReceived { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
-        player = server.FindPlayer(Int32.Parse(gameId), Int32.Parse(playerId));
+        SessionPlayer = SessionHost.Players.Find(x => x.PlayerData.PlayerId == PlayerId);
+        emergencySystem.OnChange += (() => DisplayMessage());
     }
+
 
     protected async Task PerformTask()
     {
@@ -92,7 +92,7 @@
     }
     protected async Task RefreshPage()
     {
-        if(!player.PlayerData.isEmergency)
+        if (!SessionPlayer.PlayerData.isEmergency)
         {
             hasBeenReceived = false;
         }
@@ -102,18 +102,19 @@
     protected async Task Acknowledge()
     {
         hasAcknowledged = true;
-        player.ReceivedEmergency();
+        SessionPlayer.ReceivedEmergency();
         await Task.Delay(1000);
     }
     protected async Task DisplayMessage()
     {
         hasBeenReceived = true;
-        toastService.ShowError($"Meeting has been called!", "EMERGENCY!");
+        toastService.ShowError($"Meeting has been called by {emergencySystem.WhistleBlower}", "EMERGENCY!");
         await Task.Delay(TimeSpan.FromSeconds(10));
+        hasAcknowledged = true;
     }
-    protected async Task EmergencyMessage()
+    protected async Task Emergency()
     {
-        hasAcknowledged = false;
-        player.RaiseEmergency();
+        emergencySystem.Emergency(SessionPlayer.PlayerData.Name);
     }
+
 }

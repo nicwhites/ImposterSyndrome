@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using ImposterServer.GameModels;
-using ImposterServer.Controllers;
+using ImposterServerInstance.GameModels;
+using ImposterServerInstance.Controllers;
 
-namespace ImposterServer.ServersManager
+namespace ImposterServerInstance.ServersManager
 {
     public class ServersManager
     {
