@@ -8,6 +8,8 @@ namespace ImposterServer.Controllers
     {
         public PlayerModel PlayerData { get; internal set; }
 
+        public event EventHandler<string> EmergencyEvent;
+
         public PlayerController()
         {
             PlayerData = new PlayerModel
@@ -16,6 +18,15 @@ namespace ImposterServer.Controllers
                 isAlive = true,
                 isImposter = false,
             };
+        }
+        public void RaiseEmergency()
+        {
+            EmergencyEvent?.Invoke(this, $"{PlayerData.Name} Sounded the Alarm!"); // Trigger the Event
+        }
+
+        public void ReceivedEmergency()
+        {
+            this.PlayerData.isEmergency = false;
         }
     }
 }

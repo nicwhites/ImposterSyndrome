@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ImposterServerInstance.Data;
+using Blazored.Toast;
 
 namespace ImposterServerInstance
 {
@@ -29,13 +30,13 @@ namespace ImposterServerInstance
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddSingleton<ImposterServer.ServersManager.ServersManager>();            
+            services.AddSingleton<ImposterServer.ServersManager.ServersManager>();
+            services.AddBlazoredToast();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-           
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

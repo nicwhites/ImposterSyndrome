@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 
 namespace ImposterServer.Controllers
 {
@@ -14,7 +15,6 @@ namespace ImposterServer.Controllers
         private bool disposedValue;
         public HostModel HostData { get; internal set; }
         public List<PlayerController> Players { get; internal set;}
-
         public HostController(int GameId)
         {
             HostData = new HostModel
@@ -31,6 +31,7 @@ namespace ImposterServer.Controllers
             var player = new PlayerController();
             player.PlayerData.GameId = this.HostData.GameId;
             player.PlayerData.Color = (PlayerColor)Players.Count;
+            player.EmergencyEvent += Emergency;
             // Pick a unique name
             if (Players.Count == 0)
             {
@@ -40,6 +41,7 @@ namespace ImposterServer.Controllers
             }
             else
             {
+                player.PlayerData.Name = Names.List[new Random().Next(Names.List.Length)];
                 var hsName = new HashSet<string>();
                 hsName.Add(player.PlayerData.Name);
                 bool uniqueName = Players.All(x => hsName.Add(x.PlayerData.Name));
@@ -57,6 +59,14 @@ namespace ImposterServer.Controllers
                 return player.PlayerData.PlayerId;
             }
         }
+        protected void Emergency(object sender, string e)
+        {
+            foreach(var player in Players)
+            {                
+                player.PlayerData.isEmergency = !player.PlayerData.isEmergency;                
+            }
+        }
+
         public void AddPlayer(PlayerController player)
         {
             Players.Add(player);

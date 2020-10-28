@@ -1,5 +1,9 @@
 ﻿@page "/Game/Player/{gameId}/{playerId}"
 @inject ImposterServer.ServersManager.ServersManager server
+@inject Blazored.Toast.Services.IToastService toastService
+@inject NavigationManager NavigationManager
+
+
 
 @if (!(player is null))
 {
@@ -12,6 +16,9 @@
         <div class="vertical-center">
             <button class="btn-primary" @onclick="PerformTask">Perform Task</button>
             <button class="btn-primary" @onclick="KillPlayer">Kill Player</button>
+        </div>
+        <div class="vertical-center">
+            <button class="btn-primary" @onclick="@(EmergencyMessage)">EMERGENCY</button>
         </div>
     </div>
     <center>
@@ -40,24 +47,41 @@
         </table>
     </center>
 }
-else
+
+@if (player.PlayerData.isEmergency)
 {
+
+    <div class="container">
+        @if (!hasBeenReceived)
+        {
+             @DisplayMessage();
+        }
+        @if (!hasAcknowledged)
+        {
+        <button class="btn-primary" @onclick="@(Acknowledge)">Acknowledge!</button>
+        }
+    </div>
 }
+@RefreshPage(); 
 
 @code {
-
-
-    private ImposterServer.Controllers.PlayerController player { get; set; }
 
     [Parameter]
     public string gameId { get; set; }
     [Parameter]
     public string playerId { get; set; }
+    [Parameter]
+    public ImposterServer.Controllers.PlayerController player { get; set; }
+
+
+    private bool hasAcknowledged { get; set; } = false;
+    private bool hasBeenReceived { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
         player = server.FindPlayer(Int32.Parse(gameId), Int32.Parse(playerId));
     }
+
     protected async Task PerformTask()
     {
 
@@ -66,5 +90,30 @@ else
     {
 
     }
-
+    protected async Task RefreshPage()
+    {
+        if(!player.PlayerData.isEmergency)
+        {
+            hasBeenReceived = false;
+        }
+        await Task.Delay(1000);
+        StateHasChanged();
+    }
+    protected async Task Acknowledge()
+    {
+        hasAcknowledged = true;
+        player.ReceivedEmergency();
+        await Task.Delay(1000);
+    }
+    protected async Task DisplayMessage()
+    {
+        hasBeenReceived = true;
+        toastService.ShowError($"Meeting has been called!", "EMERGENCY!");
+        await Task.Delay(TimeSpan.FromSeconds(10));
+    }
+    protected async Task EmergencyMessage()
+    {
+        hasAcknowledged = false;
+        player.RaiseEmergency();
+    }
 }

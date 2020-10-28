@@ -16,6 +16,7 @@ namespace ImposterServer.GameModels
         public string Name { get; set; }
         public PlayerColor Color { get; set; }
         public List<IPlayerTask> PlayerTasks { get; set; }
+        public bool isEmergency { get; set; }
     }
 
     public enum PlayerColor
