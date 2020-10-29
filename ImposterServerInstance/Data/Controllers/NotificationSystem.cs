@@ -7,18 +7,16 @@ namespace ImposterServerInstance.Data.Controllers
 {
     public class NotificationSystem
     {
-            public bool isEmergencyCalled { get; private set; }
             public string WhistleBlower { get; private set; }
 
-            public event Action OnChange;
+            public event Action<string,int> OnChange;
 
-            public void Emergency(string name)
+            public void Emergency(string name, int GameId)
             {
                 WhistleBlower = name;
-                isEmergencyCalled = true;
-                NotifyStateChanged();
+                NotifyStateChanged(name,GameId);
             }
 
-           private void NotifyStateChanged() => OnChange?.Invoke();     
+           private void NotifyStateChanged(string name, int id) => OnChange?.Invoke(name,id);     
     }
 }

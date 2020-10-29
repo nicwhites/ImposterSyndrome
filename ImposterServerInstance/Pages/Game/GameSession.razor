@@ -2,8 +2,7 @@
 @inject ServersManager.ServersManager server
 @using ImposterServerInstance.Controllers
 @using ImposterServerInstance.Pages.Game
-
-
+@using ImposterServerInstance.Data.Controllers 
 <h3>GameSession</h3>
 
 @if (isHost == null)
@@ -11,44 +10,48 @@
     <h2>Loading Page...</h2>
 }
 
-@if (isHost == true)
-{
-    <Host SessionHost="@SessionController.Host" GameId="@GameId" HostId="@Id" />
-}
-@if (isHost == false)
-{
-    <Player SessionHost="@SessionController.Host"GameId="@GameId" PlayerId="@Id"/>
-}
-
-@code {
-    [Parameter]
-    public string GameTitle { get; set; }
-    [Parameter]
-    public string GameId { get; set; }
-    [Parameter]
-    public int Id { get; set; }
-
-    private bool? isHost = null;
-    private GameController SessionController { get; set; }
-
-    protected override async Task OnInitializedAsync()
+    @if (isHost == true)
     {
-        // First Check if it is a Host or a player
-        SessionController = server.GamesInProgress.Find(x => x.GameId == Int32.Parse(GameId)); // First Grab the game controller
+        <Host SessionHost="@SessionController.Host" GameId="@GameId" HostId="@Id" />
+    }
+    @if (isHost == false)
+    {
+        <Player SessionHost="@SessionController.Host" GameId="@GameId" PlayerId="@Id"/>
+    }
+    @code {
+        [Parameter]
+        public string GameTitle { get; set; }
 
-        // 1) if Host
-        if (GameTitle == "Host")
+        [Parameter]
+        public string GameId { get; set; }
+        [Parameter]
+        public int Id { get; set; }
+
+
+        private bool? isHost = null;
+
+        private GameController SessionController { get; set; }
+
+        Player splayer;
+
+        protected override async Task OnInitializedAsync()
         {
-            Id = SessionController.Host.HostData.HostId;
-            isHost = true;
-        }
-        //2) If not host, see if it is a player
-        else if (GameTitle == "Player")
-        {
-            Id = await SessionController.Host.CreatePlayer();
-            isHost = false;
+            // First Check if it is a Host or a player
+            SessionController = server.GamesInProgress.Find(x => x.GameId == Int32.Parse(GameId)); // First Grab the game controller
+
+            // 1) if Host
+            if (GameTitle == "Host")
+            {
+                Id = SessionController.Host.HostData.HostId;
+                isHost = true;
+            }
+            //2) If not host, see if it is a player
+            else if (GameTitle == "Player")
+            {
+                Id = await SessionController.Host.CreatePlayer();
+                isHost = false;
+            }
+
         }
 
     }
-
-}

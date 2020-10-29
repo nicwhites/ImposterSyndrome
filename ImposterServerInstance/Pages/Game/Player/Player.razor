@@ -2,7 +2,8 @@
 @inject ImposterServerInstance.ServersManager.ServersManager server
 @inject Blazored.Toast.Services.IToastService toastService
 @inject NavigationManager NavigationManager
-@inject ImposterServerInstance.Data.Controllers.NotificationSystem emergencySystem
+@inject Data.Controllers.NotificationSystem notificationSys
+
 @if (!(SessionPlayer is null))
 {
     <div style="background-color:@Enum.GetName(typeof(ImposterServerInstance.GameModels.PlayerColor), SessionPlayer.PlayerData.Color)">
@@ -16,7 +17,7 @@
             <button class="btn-primary" @onclick="KillPlayer">Kill Player</button>
         </div>
         <div class="vertical-center">
-            <button class="btn-primary" @onclick="Emergency">EMERGENCY</button>
+            <button class="btn-primary" @onclick="@(() => notificationSys.Emergency($"{SessionPlayer.PlayerData.Name}", SessionPlayer.PlayerData.GameId))">EMERGENCY</button>
         </div>
     </div>
     <center>
@@ -46,20 +47,6 @@
     </center>
 }
 
-@if (SessionPlayer.PlayerData.isEmergency)
-{
-
-    <div class="container">
-        @if (!hasBeenReceived)
-        {
-            @DisplayMessage()
-        }
-        @if (!hasAcknowledged)
-        {
-            <button class="btn-primary" @onclick="@Acknowledge">Acknowledge!</button>
-        }
-    </div>
-}
 
 @code {
 
@@ -70,6 +57,7 @@
     [Parameter]
     public ImposterServerInstance.Controllers.HostController SessionHost { get; set; }
 
+
     private ImposterServerInstance.Controllers.PlayerController SessionPlayer { get; set; }
 
     private bool hasAcknowledged { get; set; } = false;
@@ -77,8 +65,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        notificationSys.OnChange += ((s,i) => DisplayMessage(s,i));
         SessionPlayer = SessionHost.Players.Find(x => x.PlayerData.PlayerId == PlayerId);
-        emergencySystem.OnChange += (() => DisplayMessage());
     }
 
 
@@ -105,16 +93,13 @@
         SessionPlayer.ReceivedEmergency();
         await Task.Delay(1000);
     }
-    protected async Task DisplayMessage()
+    public async Task DisplayMessage(string name, int id)
     {
-        hasBeenReceived = true;
-        toastService.ShowError($"Meeting has been called by {emergencySystem.WhistleBlower}", "EMERGENCY!");
-        await Task.Delay(TimeSpan.FromSeconds(10));
-        hasAcknowledged = true;
-    }
-    protected async Task Emergency()
-    {
-        emergencySystem.Emergency(SessionPlayer.PlayerData.Name);
+        if (id == SessionPlayer.PlayerData.GameId)
+        {
+            toastService.ShowError($"Meeting has been called", "EMERGENCY!");
+            await Task.Delay(TimeSpan.FromSeconds(10));
+        }
     }
 
 }
